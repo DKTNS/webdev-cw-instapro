@@ -1,16 +1,18 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 //const personalKey = "prod"; закоментил v1.0
-import { getToken } from "./index.js";
-const personalKey = "zenin-dmitry";
+/* import { getToken } from "./index.js"; */
+const personalKey = "zenin-dmitry"
 
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 
 export const getToken = () => {
-  const token = user ? `Bearer ${user.token}` : undefined;
-  return token;
+const user = JSON.parse(localStorage.getItem("user"));
+  return user ? `Bearer ${user.token}` : "";
+  /* const token = user ? `Bearer ${user.token}` : undefined; */
+  /* return token; */
 };
 
 export function getPosts({ token }) {
