@@ -15,12 +15,15 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
-import { getToken } from "./api.js";
+
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-
+export const getToken = () => {
+  const token = user ? `Bearer ${user.token}` : undefined;
+  return token;
+};
 
 export const logout = () => {
   user = null;
