@@ -13,9 +13,7 @@ export const initLikeListener = () => {
       const index = iteratorLike.dataset.index;
       commentList[index].likes += commentList[index].isLiked ? -1 : +1;
       commentList[index].isLiked = !commentList[index].isLiked;
-      renderComments(); //перерисовываем форму для лайков с счетчиком
-      initLikeListener()
-
+      
     });
   }
 

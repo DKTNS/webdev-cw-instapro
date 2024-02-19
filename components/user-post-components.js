@@ -6,12 +6,8 @@ import { initLikeListener } from "../module/likes.js";
 export function renderUserPostsPage({ posts }) {
     // TODO: реализован рендер постов из api
     console.log("Cписок постов юзера :", posts);
-    let likeImg;
-    let likes;
-
     const appElement = document.getElementById("app");
-    const postEl = posts
-        .map((post) => {
+    const postEl = posts.map((post) => {
             return `
       <li class="post" id="user-posts">
         <div class="post-header" data-user-id="${post.user.id}">
@@ -54,5 +50,4 @@ export function renderUserPostsPage({ posts }) {
         });
       }
     initLikeListener();
-
 }
