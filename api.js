@@ -107,7 +107,7 @@ export function disLike({ id }) {
 export function registerUser({ login, password, name, imageUrl }) {
   return fetch(baseHost + "/api/user", {
     method: "POST",
-    body: Text.stringify({
+    body: JSON.stringify({
       login,
       password,
       name,
