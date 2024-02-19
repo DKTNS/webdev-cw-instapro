@@ -1,20 +1,36 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-//const personalKey = "prod"; закоментил v1.0
-import { getToken } from "./index.js";
+import { getToken } from "./index.js"
+/* const personalKey = "prod";  */
 const personalKey = "zenin-dmitry";
-
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+const userHost = `${baseHost}/api/v1/${personalKey}/instapro/user-posts`;
 
 
-export const getToken = () => {
-  const token = user ? `Bearer ${user.token}` : undefined;
-  return token;
-};
-
-export function getPosts({ token }) {
+export function getPosts({token}) {
+  //console.log(getPosts);
   return fetch(postsHost, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
+
+export function getUserPosts({ id }) {
+  console.log(id)
+  return fetch(`${userHost}/${id}`, {
     method: "GET",
     headers: {
       Authorization: getToken(),
@@ -24,13 +40,68 @@ export function getPosts({ token }) {
       if (response.status === 401) {
         throw new Error("Нет авторизации");
       }
-
       return response.json();
     })
     .then((data) => {
       return data.posts;
     });
 }
+
+export function addPost({ description, imageUrl }) {
+  // console.log(likeComment);
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: getToken(),
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl
+    }),
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+export function deletePost({ id }) {
+  return fetch(`${postsHost}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: getToken(),
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+export function like({ id }) {
+  console.log(id);
+  return fetch(`${postsHost}/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: getToken(),
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      return data.post
+    })
+}
+
+export function disLike({ id }) {
+  return fetch(`${postsHost}/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: getToken(),
+    },
+  })
+    .then((response) => {
+      return response.json();
+    });
+}
+
 
 // https://github.com/GlebkaF/webdev-hw-api/blob/main/pages/api/user/README.md#%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F
 export function registerUser({ login, password, name, imageUrl }) {
@@ -74,61 +145,6 @@ export function uploadImage({ file }) {
     method: "POST",
     body: data,
   }).then((response) => {
-    return response.json();
-  });
-}
-
-export function delPost({ id }) {
-  return fetch(`${postsHost}/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: getToken(),
-    },
-  }).then((response) => {
-    return response.json();
-  });
-}
-
-export function addPost({ description, imageUrl }) {
-  // console.log(likeComment);
-  return fetch(postsHost, {
-    method: "POST",
-    headers: {
-      Authorization: getToken(),
-    },
-    body: JSON.stringify({
-      description,
-      imageUrl
-    }),
-  }).then((response) => {
-    return response.json();
-  });
-}
-
-export function addLike({ id }) {
-  console.log(id);
-  return fetch(`${postsHost}/${id}/like`, {
-    method: "POST",
-    headers: {
-      Authorization: getToken(),
-    },
-  })
-  .then((response) => {
-    return response.json();
-  })
-    .then(data => {
-    return data.post
-  })
-}
-
-export function delLike({ id}) {
-  return fetch(`${postsHost}/${id}/dislike`, {
-    method: "POST",
-    headers: {
-      Authorization: getToken(),
-    },
-  })
-  .then((response) => {
     return response.json();
   });
 }
